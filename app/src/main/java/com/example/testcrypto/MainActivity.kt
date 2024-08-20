@@ -21,29 +21,29 @@ class MainActivity : ComponentActivity() {
         setContent {
             CryptocurrencyAppTheme {
                 val navController = rememberNavController()
-                    NavHost(
-                        navController = navController,
-                        startDestination = "coin_list" // Начальный экран
-                    ) {
-                        // Экран со списком криптовалют
-                        composable("coin_list") {
-                            CoinListScreen(navController = navController, onCoinSelected = { coin ->
-                                // Переход на экран с подробной информацией о монете
-                                navController.navigate("coin_detail/${coin.id}")
-                            })
-                        }
-                        // Экран с подробной информацией о монете
-                        composable("coin_detail/{coinId}") { backStackEntry ->
-                            val coinId = backStackEntry.arguments?.getString("coinId")
-                            coinId?.let {
-                                CoinDetailScreen(
-                                    coinId = it,
-                                    navController = navController,
-                                    onBack = { navController.popBackStack() }
-                                )
-                            }
+                NavHost(
+                    navController = navController,
+                    startDestination = "coin_list" // Начальный экран
+                ) {
+                    // Экран со списком криптовалют
+                    composable("coin_list") {
+                        CoinListScreen(navController = navController, onCoinSelected = { coin ->
+                            // Переход на экран с подробной информацией о монете
+                            navController.navigate("coin_detail/${coin.id}")
+                        })
+                    }
+                    // Экран с подробной информацией о монете
+                    composable("coin_detail/{coinId}") { backStackEntry ->
+                        val coinId = backStackEntry.arguments?.getString("coinId")
+                        coinId?.let {
+                            CoinDetailScreen(
+                                coinId = it,
+                                navController = navController,
+                                onBack = { navController.popBackStack() }
+                            )
                         }
                     }
+                }
             }
         }
     }

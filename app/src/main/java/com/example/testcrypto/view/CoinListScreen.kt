@@ -240,7 +240,7 @@ fun Double.formatWithCommas(): String {
 // Формат процента с двумя знаками после запятой
 fun Double.formatPercentage(): String {
     val sign = if (this < 0) "-" else "+"
-    return "$sign${"%.2f".format(this.absoluteValue)}%"
+    return "$sign${"%.2f".format(this.absoluteValue)}"
 }
 
 // Дизайн chips и их поведение при клике
