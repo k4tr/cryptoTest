@@ -1,6 +1,5 @@
-package com.example.testcrypto.ui.coinlist
+package com.example.testcrypto.view
 import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -25,7 +24,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -44,7 +42,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.testcrypto.R
-import com.example.testcrypto.data.datasource.CoinData
+import com.example.testcrypto.model.datasource.CoinData
+import com.example.testcrypto.viewmodel.CoinListState
+import com.example.testcrypto.viewmodel.CoinListViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -56,25 +56,29 @@ fun CoinListScreen(
     viewModel: CoinListViewModel = hiltViewModel(),
     onCoinSelected: (CoinData) -> Unit
 ) {
+    // Состояние экрана
     val state by viewModel.state.observeAsState(CoinListState.Loading)
     val currencyState = viewModel.currency.collectAsState().value
+    // Состояние для pull to refresh и snackbar
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false)
     val snackbarHostState = remember { SnackbarHostState() }
     var isRefreshAction by remember { mutableStateOf(false) }
 
-    // Переменная для отображения цены
+    // Переменная для отображения валюты
     val currencySymbol = when (currencyState) {
         "usd" -> "$"
         "rub" -> "₽"
         else -> "$"
     }
-    // Обрабатываем ошибку и показываем Snackbar
+
+    // Показываем Snackbar в случае ошибки из-за pull to refresh
     LaunchedEffect(state) {
         if (state is CoinListState.Error && isRefreshAction) {
             snackbarHostState.showSnackbar("Произошла ошибка при загрузке")
-            isRefreshAction = false // Сброс состояния после показа сообщения
+            isRefreshAction = false
         }
     }
+
     // Обновление данных при Pull to Refresh
     fun refreshData() {
         isRefreshAction = true
@@ -107,7 +111,6 @@ fun CoinListScreen(
             onRefresh = {
                 swipeRefreshState.isRefreshing = true
                 refreshData()
-                // После завершения обновления сбросьте состояние
                 swipeRefreshState.isRefreshing = false
             }
         ) {
@@ -132,7 +135,7 @@ fun CoinListScreen(
                         onSelected = { viewModel.setCurrency("rub") }
                     )
                 }
-                // Разделитель тулбара и списка крипты
+                // Разделитель тулбара и списка монет
                 Divider(
                     color = Color(0xFFE0E0E0),
                     thickness = 1.dp,
@@ -149,7 +152,6 @@ fun CoinListScreen(
                             CircularProgressIndicator(color = Color(0xFFFFAD25))
                         }
                     }
-
                     is CoinListState.Error -> {
                         // Отображение сообщения об ошибке
                         ErrorScreen(
@@ -157,7 +159,6 @@ fun CoinListScreen(
                             onRetry = { viewModel.fetchCoins(currencyState) }
                         )
                     }
-
                     is CoinListState.Success -> {
                         // Отображение списка монет
                         val coins = (state as CoinListState.Success).coins
@@ -181,9 +182,8 @@ fun CoinListScreen(
 fun CoinListItem(
     coin: CoinData,
     currencySymbol: String,
-    onClick: (CoinData) -> Unit // Функция, которая будет вызываться при нажатии на элемент
+    onClick: (CoinData) -> Unit // Функция, которая будет вызываться при нажатии на элемент списка
 ) {
-
     // Контейнер для элемента списка
     Row(
         modifier = Modifier
@@ -203,7 +203,7 @@ fun CoinListItem(
                     .clip(CircleShape)
                     .background(Color.Gray)
             )
-            Spacer(modifier = Modifier.width(8.dp)) // Отступ между изображением и текстом
+            Spacer(modifier = Modifier.width(8.dp))
             // Отображение названия криптовалюты
             Column {
                 Text(
@@ -231,6 +231,7 @@ fun CoinListItem(
         }
     }
 }
+
 // Формат цены с разделением на порядки
 fun Double.formatWithCommas(): String {
     val formatter = NumberFormat.getNumberInstance(Locale.US)
@@ -241,7 +242,8 @@ fun Double.formatPercentage(): String {
     val sign = if (this < 0) "-" else "+"
     return "$sign${"%.2f".format(this.absoluteValue)}%"
 }
-//форма чипсов
+
+// Дизайн chips и их поведение при клике
 @Composable
 fun CurrencyChip(
     currency: String,
@@ -270,7 +272,8 @@ fun CurrencyChip(
         }
     }
 }
-//сообщение об ошибке
+
+// Сообщение об ошибке
 @Composable
 fun ErrorScreen(
     errorMessage: String,
@@ -285,7 +288,7 @@ fun ErrorScreen(
     ) {
         // Картинка ошибки
         Image(
-            painter = painterResource(id = R.drawable.ic_error), // Замените на вашу картинку ошибки
+            painter = painterResource(id = R.drawable.ic_error),
             contentDescription = "Error",
             modifier = Modifier.size(120.dp)
         )

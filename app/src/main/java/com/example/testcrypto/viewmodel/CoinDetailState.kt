@@ -1,6 +1,6 @@
-package com.example.testcrypto.ui.coindetail
+package com.example.testcrypto.viewmodel
 
-import com.example.testcrypto.data.datasource.CoinDetail
+import com.example.testcrypto.model.datasource.CoinDetail
 
 sealed class CoinDetailState {
     object Loading : CoinDetailState()

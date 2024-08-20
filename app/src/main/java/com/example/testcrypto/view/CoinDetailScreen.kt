@@ -1,4 +1,4 @@
-package com.example.testcrypto.ui.coindetail
+package com.example.testcrypto.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.testcrypto.ui.coinlist.ErrorScreen
-import com.example.testcrypto.ui.coindetail.CoinDetailState
+import com.example.testcrypto.viewmodel.CoinDetailState
+import com.example.testcrypto.viewmodel.CoinDetailViewModel
 import com.example.testcrypto.ui.theme.robotoFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +47,7 @@ fun CoinDetailScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    // Запрос данных при загрузке экрана
     LaunchedEffect(coinId) {
         viewModel.fetchCoinDetail(coinId)
     }
@@ -55,7 +56,6 @@ fun CoinDetailScreen(
         topBar = {
             if (state is CoinDetailState.Success) {
                 val coinDetail = (state as CoinDetailState.Success).coinDetail
-
                 TopAppBar(
                     title = {
                         Text(
@@ -97,6 +97,7 @@ fun CoinDetailScreen(
         ) {
             when (state) {
                 is CoinDetailState.Loading -> {
+                    // Отображение индикатора загрузки
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -105,6 +106,7 @@ fun CoinDetailScreen(
                     }
                 }
                 is CoinDetailState.Error -> {
+                    // Отображение сообщения об ошибке
                     ErrorScreen(
                         errorMessage = (state as CoinDetailState.Error).message,
                         onRetry = { viewModel.fetchCoinDetail(coinId) }
@@ -117,7 +119,7 @@ fun CoinDetailScreen(
                         horizontalAlignment = Alignment.Start,
                         verticalArrangement = Arrangement.Top
                     ) {
-                        // Колонка для изображения крипты
+                        // Колонка для изображения монеты
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally,

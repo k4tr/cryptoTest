@@ -1,7 +1,7 @@
-package com.example.testcrypto.utils
+package com.example.testcrypto.di
 
-import com.example.testcrypto.data.datasource.CoinApi
-import com.example.testcrypto.data.repository.RetrofitRepository
+import com.example.testcrypto.model.datasource.CoinApi
+import com.example.testcrypto.model.repository.RetrofitRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

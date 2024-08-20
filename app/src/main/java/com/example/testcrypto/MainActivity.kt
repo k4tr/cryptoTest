@@ -4,18 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.testcrypto.ui.coinlist.CoinListScreen
+import com.example.testcrypto.view.CoinListScreen
 import com.example.testcrypto.ui.theme.CryptocurrencyAppTheme
-import com.example.testcrypto.ui.coindetail.CoinDetailScreen
+import com.example.testcrypto.view.CoinDetailScreen
 import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

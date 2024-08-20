@@ -1,6 +1,4 @@
-package com.example.testcrypto.data.datasource
-import com.example.testcrypto.data.datasource.CoinData
-import com.example.testcrypto.data.datasource.CoinDetail
+package com.example.testcrypto.model.datasource
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

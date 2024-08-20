@@ -1,4 +1,4 @@
-package com.example.testcrypto.data.datasource
+package com.example.testcrypto.model.datasource
 
 import com.google.gson.annotations.SerializedName
 
